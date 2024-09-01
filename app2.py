@@ -4,8 +4,8 @@ from qdrant_client import QdrantClient
 from qdrant_client.http.models import SearchRequest
 import numpy as np
 
-# Set up Streamlit dark mode
-st.set_page_config(page_title="Qdrant Vector Search", layout="centered", initial_sidebar_state="collapsed", theme="dark")
+# Set up Streamlit page configuration
+st.set_page_config(page_title="Qdrant Vector Search", layout="centered", initial_sidebar_state="collapsed")
 
 # Initialize the Qdrant client
 client = QdrantClient(host="localhost", port=6333)
