@@ -10,18 +10,20 @@ client = QdrantClient(host="localhost", port=6333)
 # Initialize the embedding model
 model = SentenceTransformer('all-mpnet-base-v2')
 
-# Define vector configuration
+# Define collection and vector configuration
+collection_name = "embeddings_collection"
 vector_params = VectorParams(
     size=768,  # Vector size of the all-mpnet-base-v2 model
     distance=Distance.COSINE  # Distance metric
 )
 
-# Create or connect to a Qdrant collection
-collection_name = "embeddings_collection"
-client.recreate_collection(
-    collection_name=collection_name,
-    vectors_config=vector_params
-)
+# Check if the collection exists
+if not client.has_collection(collection_name=collection_name):
+    # Create the collection if it doesn't exist
+    client.create_collection(
+        collection_name=collection_name,
+        vectors_config=vector_params
+    )
 
 # Streamlit UI
 st.title("Embedding Storage with Qdrant")
