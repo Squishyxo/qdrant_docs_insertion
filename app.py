@@ -1,7 +1,7 @@
 import streamlit as st
 from sentence_transformers import SentenceTransformer
 from qdrant_client import QdrantClient
-from qdrant_client.models import PointStruct
+from qdrant_client.models import PointStruct, VectorParams, Distance
 import uuid
 
 # Initialize the Qdrant client
@@ -10,12 +10,17 @@ client = QdrantClient(host="localhost", port=6333)
 # Initialize the embedding model
 model = SentenceTransformer('all-mpnet-base-v2')
 
+# Define vector configuration
+vector_params = VectorParams(
+    size=768,  # Vector size of the all-mpnet-base-v2 model
+    distance=Distance.COSINE  # Distance metric
+)
+
 # Create or connect to a Qdrant collection
 collection_name = "embeddings_collection"
 client.recreate_collection(
     collection_name=collection_name,
-    vector_size=768,  # Vector size of the all-mpnet-base-v2 model
-    distance="Cosine"
+    vectors_config=vector_params
 )
 
 # Streamlit UI
