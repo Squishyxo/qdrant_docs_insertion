@@ -18,7 +18,10 @@ vector_params = VectorParams(
 )
 
 # Check if the collection exists
-if not client.has_collection(collection_name=collection_name):
+collections = client.get_collections().collections
+collection_names = [col.name for col in collections]
+
+if collection_name not in collection_names:
     # Create the collection if it doesn't exist
     client.create_collection(
         collection_name=collection_name,
