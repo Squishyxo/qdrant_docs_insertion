@@ -1,8 +1,12 @@
+import os
 import streamlit as st
 from sentence_transformers import SentenceTransformer
 from qdrant_client import QdrantClient
-from qdrant_client.http.models import SearchRequest
+from qdrant_client.http.models import Filter, PayloadSelector, ScoredPoint
 import numpy as np
+
+# Disable tokenizers parallelism warning
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 # Set up Streamlit page configuration
 st.set_page_config(page_title="Qdrant Vector Search", layout="centered", initial_sidebar_state="collapsed")
@@ -26,14 +30,10 @@ if st.button("Search"):
         query_embedding = model.encode(user_query).tolist()
 
         # Perform vector search in Qdrant
-        search_request = SearchRequest(
-            vector=query_embedding,
-            limit=5,  # Return top 5 results
-        )
-
         search_results = client.search(
             collection_name=collection_name,
-            search_request=search_request
+            query_vector=query_embedding,
+            limit=5  # Return top 5 results
         )
 
         # Display the search results
